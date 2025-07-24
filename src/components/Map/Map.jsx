@@ -1,9 +1,9 @@
-
 import React, { useEffect, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import useStyles from "./styles";
 import axios from "axios";
+import MapEvents from "./MapEvents";
 
 function ChangeMapView({ coords }) {
   const map = useMap();
@@ -11,9 +11,8 @@ function ChangeMapView({ coords }) {
   return null;
 }
 
-const Map = ({ searchQuery }) => {
+const Map = ({ searchQuery, setCoordinates, setBounds, coordinates, bounds }) => {
   const classes = useStyles();
-  const [coordinates, setCoordinates] = useState([40.7128, -74.0060]); // NYC default
   const [results, setResults] = useState([]);
 
   useEffect(() => {
@@ -35,11 +34,12 @@ const Map = ({ searchQuery }) => {
   return (
     <div className={classes.mapContainer}>
       <MapContainer center={coordinates} zoom={14} style={{ height: "100%", width: "100%" }}>
-        <ChangeMapView coords={coordinates} />
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
+  <ChangeMapView coords={coordinates} />
+  <MapEvents setCoordinates={setCoordinates} setBounds={setBounds} />
+  <TileLayer
+    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+  />
         {results.map((place, idx) => (
           <Marker
             key={idx}
