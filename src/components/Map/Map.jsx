@@ -4,6 +4,7 @@ import "leaflet/dist/leaflet.css";
 import useStyles from "./styles";
 import axios from "axios";
 import MapEvents from "./MapEvents";
+import { getPlacesData } from "../../api";
 
 function ChangeMapView({ coords }) {
   const map = useMap();
@@ -11,25 +12,59 @@ function ChangeMapView({ coords }) {
   return null;
 }
 
-const Map = ({ searchQuery, setCoordinates, setBounds, coordinates, bounds }) => {
+const Map = ({ searchQuery, setCoordinates, setBounds, coordinates, bounds, setPlaces }) => {
   const classes = useStyles();
   const [results, setResults] = useState([]);
 
+  // useEffect(() => {
+  //   const fetchCoords = async () => {
+  //     if (!searchQuery) return;
+  //     try{
+  //     const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery)}`;
+  //     const { data } = await axios.get(url);
+  //     if (data.length > 0) {
+  //       setCoordinates([parseFloat(data[0].lat), parseFloat(data[0].lon)]);
+  //       setResults(data);
+  //     }} catch (error) {
+  //       console.error("Error fetching coordinates:", error);
+  //     }
+  //   };
+  //   fetchCoords();
+  // }, [searchQuery]); 
+
   useEffect(() => {
+  if (searchQuery) {
     const fetchCoords = async () => {
-      if (!searchQuery) return;
-      try{
-      const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery)}`;
-      const { data } = await axios.get(url);
-      if (data.length > 0) {
-        setCoordinates([parseFloat(data[0].lat), parseFloat(data[0].lon)]);
-        setResults(data);
-      }} catch (error) {
+      try {
+        const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery)}`;
+        const { data } = await axios.get(url);
+        if (data.length > 0) {
+          const lat = parseFloat(data[0].lat);
+          const lng = parseFloat(data[0].lon);
+          setCoordinates([lat, lng]);
+          setBounds({
+            ne: { lat: lat + 0.1, lng: lng + 0.1 },
+            sw: { lat: lat - 0.1, lng: lng - 0.1 },
+          });
+          getPlacesData(bounds)
+            .then((data) => {
+              if (data) {
+                setPlaces([data]);
+              } else {
+                console.error('No data returned from API');
+              }
+            })
+            .catch((error) => {
+              console.error('Error fetching places data:', error);
+            });
+        }
+      } catch (error) {
         console.error("Error fetching coordinates:", error);
       }
     };
     fetchCoords();
-  }, [searchQuery]);
+  }
+}, [searchQuery]);
 
   return (
     <div className={classes.mapContainer}>
