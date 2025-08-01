@@ -1,13 +1,29 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import { CircularProgress, Grid, Typography, InputLabel, MenuItem, FormControl, Select } from "@mui/material";
 import PlaceDetails from "../PlaceDetails/PlaceDetails";
 
 import useStyles from "./styles";
-const List = ({places}) => {
-    const classes = useStyles();
-    const [type, setType] = useState("restaurants");
-    const [rating, setRating] = useState("");
 
+const List = ({places, type, setType, rating, setRating}) => {
+    const classes = useStyles();
+    const [filteredPlaces, setFilteredPlaces] = useState([]);
+
+    useEffect(() => {
+        if (places && places.length > 0) {
+            let filtered = places;
+            
+            // Filter by rating if rating is selected
+            if (rating && rating > 0) {
+                filtered = places.filter(place => 
+                    place.rating && parseFloat(place.rating) >= parseFloat(rating)
+                );
+            }
+            
+            setFilteredPlaces(filtered);
+        } else {
+            setFilteredPlaces([]);
+        }
+    }, [places, rating]);
 
     return (
         <div className={classes.container}>
@@ -33,7 +49,7 @@ const List = ({places}) => {
             </div>
       
           <Grid container spacing={3} className={classes.list}>
-                 {places?.map((place, i) => (
+                 {filteredPlaces?.map((place, i) => (
                     <Grid item key={i} xs={12}>
                         <PlaceDetails place={place} />
                         </Grid>

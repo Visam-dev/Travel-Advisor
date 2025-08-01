@@ -12,7 +12,7 @@ function ChangeMapView({ coords }) {
   return null;
 }
 
-const Map = ({ searchQuery, setCoordinates, setBounds, coordinates, bounds, setPlaces }) => {
+const Map = ({ searchQuery, setCoordinates, setBounds, coordinates, bounds, setPlaces, type }) => {
   const classes = useStyles();
   const [results, setResults] = useState([]);
 
@@ -46,10 +46,10 @@ const Map = ({ searchQuery, setCoordinates, setBounds, coordinates, bounds, setP
             ne: { lat: lat + 0.1, lng: lng + 0.1 },
             sw: { lat: lat - 0.1, lng: lng - 0.1 },
           });
-          getPlacesData(bounds)
+          getPlacesData(bounds, type)
             .then((data) => {
               if (data) {
-                setPlaces([data]);
+                setPlaces(data);
               } else {
                 console.error('No data returned from API');
               }
@@ -64,7 +64,7 @@ const Map = ({ searchQuery, setCoordinates, setBounds, coordinates, bounds, setP
     };
     fetchCoords();
   }
-}, [searchQuery]);
+}, [searchQuery, type]);
 
   return (
     <div className={classes.mapContainer}>

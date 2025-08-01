@@ -1,11 +1,25 @@
 import axios from "axios";
 
-
-export const getPlacesData = async (bounds) => {
-  console.log("getplacesdata called with bounds", bounds);
+export const getPlacesData = async (bounds, type = "restaurants") => {
+  console.log("getplacesdata called with bounds", bounds, "and type", type);
   try {
     const timestamp = new Date().getTime();
-    const URL = `https://travel-advisor.p.rapidapi.com/restaurants/list-in-boundary?bl_latitude=${bounds.sw.lat}&tr_latitude=${bounds.ne.lat}&bl_longitude=${bounds.sw.lng}&tr_longitude=${bounds.ne.lng}&timestamp=${timestamp}`;
+    let URL;
+    
+    switch(type) {
+      case "restaurants":
+        URL = `https://travel-advisor.p.rapidapi.com/restaurants/list-in-boundary?bl_latitude=${bounds.sw.lat}&tr_latitude=${bounds.ne.lat}&bl_longitude=${bounds.sw.lng}&tr_longitude=${bounds.ne.lng}&timestamp=${timestamp}`;
+        break;
+      case "hotels":
+        URL = `https://travel-advisor.p.rapidapi.com/hotels/list-in-boundary?bl_latitude=${bounds.sw.lat}&tr_latitude=${bounds.ne.lat}&bl_longitude=${bounds.sw.lng}&tr_longitude=${bounds.ne.lng}&timestamp=${timestamp}`;
+        break;
+      case "attractions":
+        URL = `https://travel-advisor.p.rapidapi.com/attractions/list-in-boundary?bl_latitude=${bounds.sw.lat}&tr_latitude=${bounds.ne.lat}&bl_longitude=${bounds.sw.lng}&tr_longitude=${bounds.ne.lng}&timestamp=${timestamp}`;
+        break;
+      default:
+        URL = `https://travel-advisor.p.rapidapi.com/restaurants/list-in-boundary?bl_latitude=${bounds.sw.lat}&tr_latitude=${bounds.ne.lat}&bl_longitude=${bounds.sw.lng}&tr_longitude=${bounds.ne.lng}&timestamp=${timestamp}`;
+    }
+
     const {
       data: { data },
     } = await axios.get(URL, {
