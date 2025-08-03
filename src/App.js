@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { CssBaseline, Grid } from "@mui/material";
+import { CssBaseline, Grid, ThemeProvider, createTheme } from "@mui/material";
 import Header from "./components/Header/Header";
 import List from "./components/List/List";
 import Map from "./components/Map/Map";
+import Weather from "./components/Weather/Weather";
 import { getPlacesData } from "./api";
 
 const App = () => {
@@ -10,6 +11,7 @@ const App = () => {
   const [places, setPlaces] = useState([]);
   const [type, setType] = useState("restaurants");
   const [rating, setRating] = useState(0);
+  const [darkMode, setDarkMode] = useState(false);
   
   const [coordinates, setCoordinates] = useState({
     lat: 24.8607, // Karachi coordinates
@@ -18,6 +20,72 @@ const App = () => {
   const [bounds, setBounds] = useState({
     ne: { lat: 24.9607, lng: 67.1011 },
     sw: { lat: 24.7607, lng: 66.9011 },
+  });
+
+  // Create theme based on dark mode state
+  const theme = createTheme({
+    palette: {
+      mode: darkMode ? 'dark' : 'light',
+      primary: {
+        main: darkMode ? '#90caf9' : '#1976d2',
+      },
+      secondary: {
+        main: darkMode ? '#f48fb1' : '#dc004e',
+      },
+      background: {
+        default: darkMode ? '#1a1a1a' : '#f5f5f5',
+        paper: darkMode ? '#2a2a2a' : '#ffffff',
+      },
+      text: {
+        primary: darkMode ? '#ffffff' : '#000000',
+        secondary: darkMode ? '#b0b0b0' : '#666666',
+      },
+      divider: darkMode ? '#404040' : '#e0e0e0',
+    },
+    components: {
+      MuiCard: {
+        styleOverrides: {
+          root: {
+            backgroundColor: darkMode ? '#2a2a2a' : '#ffffff',
+            color: darkMode ? '#ffffff' : '#000000',
+            border: darkMode ? '1px solid #404040' : '1px solid #e0e0e0',
+          },
+        },
+      },
+      MuiFormControl: {
+        styleOverrides: {
+          root: {
+            backgroundColor: darkMode ? '#2a2a2a' : '#ffffff',
+          },
+        },
+      },
+      MuiSelect: {
+        styleOverrides: {
+          root: {
+            color: darkMode ? '#ffffff' : '#000000',
+          },
+        },
+      },
+      MuiMenuItem: {
+        styleOverrides: {
+          root: {
+            backgroundColor: darkMode ? '#2a2a2a' : '#ffffff',
+            color: darkMode ? '#ffffff' : '#000000',
+            '&:hover': {
+              backgroundColor: darkMode ? '#3a3a3a' : '#f5f5f5',
+            },
+          },
+        },
+      },
+      MuiChip: {
+        styleOverrides: {
+          root: {
+            backgroundColor: darkMode ? '#404040' : '#e0e0e0',
+            color: darkMode ? '#ffffff' : '#000000',
+          },
+        },
+      },
+    },
   });
 
   useEffect(() => {
@@ -76,16 +144,12 @@ const App = () => {
 
   // Fetch places when search query changes
   useEffect(() => {
-    console.log("Fetching places data with bounds:", bounds);
     if (searchQuery) {
       setPlaces([]); 
       getPlacesData(bounds, type)
         .then((data) => {
-          console.log("Places data fetched:", data);
           if (data) {
             setPlaces(data);
-          } else {
-            console.error("No data returned from API");
           }
         })
         .catch((error) => {
@@ -112,29 +176,40 @@ const App = () => {
   return (
     <>
       <CssBaseline />
-      <Header searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-      <Grid container spacing={3} style={{ width: "100%" }}>
-        <Grid item xs={12} md={4}>
-          <List 
-            places={places} 
-            type={type} 
-            setType={setType} 
-            rating={rating} 
-            setRating={setRating} 
-          />
+      <ThemeProvider theme={theme}>
+        <Header 
+          searchQuery={searchQuery} 
+          setSearchQuery={setSearchQuery} 
+          darkMode={darkMode}
+          setDarkMode={setDarkMode}
+        />
+        <Grid container spacing={0} style={{ width: "100%" }}>
+          <Grid item xs={12} md={4}>
+            <List 
+              places={places} 
+              type={type} 
+              setType={setType} 
+              rating={rating} 
+              setRating={setRating} 
+            />
+          </Grid>
+          <Grid item xs={12} md={8}>
+            <Map
+              searchQuery={searchQuery}
+              setCoordinates={setCoordinates}
+              bounds={bounds}
+              setBounds={setBounds}
+              coordinates={coordinates}
+              setPlaces={setPlaces}
+              type={type}
+            />
+            <Weather 
+              searchQuery={searchQuery}
+              coordinates={coordinates}
+            />
+          </Grid>
         </Grid>
-        <Grid item xs={12} md={8}>
-          <Map
-            searchQuery={searchQuery}
-            setCoordinates={setCoordinates}
-            bounds={bounds}
-            setBounds={setBounds}
-            coordinates={coordinates}
-            setPlaces={setPlaces}
-            type={type}
-          />
-        </Grid>
-      </Grid>
+      </ThemeProvider>
     </>
   );
 };

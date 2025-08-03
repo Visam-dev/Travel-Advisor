@@ -27,7 +27,7 @@ const List = ({places, type, setType, rating, setRating}) => {
 
     return (
         <div className={classes.container}>
-            <Typography variant="h4" className={classes.title}>Restaurants, Hotels & Attractions around you</Typography>
+            <Typography variant="h3" className={classes.title}>Explore Your New HOLIDAY!!!</Typography>
             <div className={classes.formControlsWrapper}>
                 <FormControl className={classes.formControl}>
                     <InputLabel>Type</InputLabel>

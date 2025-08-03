@@ -30,7 +30,7 @@ export const getPlacesData = async (bounds, type = "restaurants") => {
         tr_longitude: bounds.ne.lng,
       },
       headers: {
-        "x-rapidapi-key": "126c542156msh1a18493933f6110p17a363jsn485bcb9fb1ce",
+        "x-rapidapi-key": "85990b601dmshfe4f909663afee7p175b65jsn53bf513ee609",
         "x-rapidapi-host": "travel-advisor.p.rapidapi.com",
       },
     });

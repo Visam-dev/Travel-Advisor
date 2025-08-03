@@ -7,6 +7,7 @@ export default makeStyles((theme) => ({
     [theme.breakpoints.up('sm')]: {
       display: 'block',
     },
+    color: theme.palette.text.primary,
   },
   search: {
     position: 'relative',
@@ -37,5 +38,13 @@ export default makeStyles((theme) => ({
   },
   toolbar: {
     display: 'flex', justifyContent: 'space-between',
+  },
+  themeToggle: {
+    marginLeft: theme.spacing(1),
+    transition: 'transform 0.3s ease',
+    '&:hover': {
+      transform: 'scale(1.1)',
+      color: theme.palette.primary.main,
+    },
   },
 }));
