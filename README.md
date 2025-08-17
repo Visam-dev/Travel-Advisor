@@ -5,12 +5,12 @@ A modern, responsive travel application that helps you discover restaurants, hot
 ## 📸 Screenshots
 
 ### Interactive Map Interface
-![Travel Advisor - Map View](./screenshots/map-view.png)
+![Travel Advisor - Map View](./screenshots/TA.png)
 
 *Interactive map view showing the search interface with "Explore Your New Adventure" title, type selection chips (Restaurants, Hotels, Attractions), filter dropdowns, and detailed place information. The map displays location markers and allows users to explore different areas.*
 
 ### Weather & Stats Dashboard
-![Travel Advisor - Weather Section](./screenshots/TA.png)
+![Travel Advisor - Weather Section](./screenshots/TA2.png)
 
 *Weather dashboard showing current weather conditions, 5-day forecast, and Quick Stats Panel with location information, number of places found, and top-rated places count. Features real-time weather data with temperature, humidity, wind speed, and pressure metrics.*
 
