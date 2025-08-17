@@ -1,6 +1,47 @@
 import { makeStyles } from '@mui/styles';
 
 export default makeStyles((theme) => ({
+  titleContainer: {
+    textAlign: 'center',
+    marginBottom: theme.spacing(3),
+    padding: theme.spacing(3),
+    backgroundColor: theme.palette.mode === 'dark' ? 'rgba(42, 42, 42, 0.8)' : 'rgba(255, 255, 255, 0.8)',
+    backdropFilter: 'blur(15px)',
+    WebkitBackdropFilter: 'blur(15px)',
+    borderRadius: '16px',
+    border: theme.palette.mode === 'dark' ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid rgba(0, 0, 0, 0.1)',
+    boxShadow: theme.palette.mode === 'dark' ? '0 8px 32px rgba(0, 0, 0, 0.3)' : '0 8px 32px rgba(0, 0, 0, 0.1)',
+  },
+  title: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontWeight: 700,
+    background: theme.palette.mode === 'dark' 
+      ? 'linear-gradient(45deg, #90caf9, #f48fb1)' 
+      : 'linear-gradient(45deg, #1976d2, #dc004e)',
+    backgroundClip: 'text',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+    marginBottom: theme.spacing(2),
+  },
+  titleIcon: {
+    marginRight: theme.spacing(1),
+    fontSize: '2rem',
+    color: theme.palette.primary.main,
+  },
+  subtitleContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    gap: theme.spacing(1),
+    flexWrap: 'wrap',
+  },
+  typeChip: {
+    transition: 'all 0.3s ease',
+    '&:hover': {
+      transform: 'scale(1.05)',
+    },
+  },
   formControl: {
     margin: theme.spacing(1), 
     minWidth: 180, 
@@ -61,16 +102,35 @@ export default makeStyles((theme) => ({
     padding: '25px',
     backgroundColor: theme.palette.background.default,
     color: theme.palette.text.primary,
+    height: 'calc(100vh - 64px)', // Full height minus header
+    display: 'flex',
+    flexDirection: 'column',
+    minHeight: '200vh', // Extend much further to match weather section length
   },
   marginBottom: {
     marginBottom: '30px',
   },
   list: {
-    height: '75vh', 
+    flex: 1,
     overflow: 'auto',
     marginTop: '20px',
     paddingTop: '20px',
-    borderTop: `1px solid ${theme.palette.divider}`,
+    paddingBottom: '300px', // Much more bottom padding to extend further down
+    // Custom scrollbar styling for dark mode
+    '&::-webkit-scrollbar': {
+      width: '8px',
+    },
+    '&::-webkit-scrollbar-track': {
+      background: theme.palette.mode === 'dark' ? '#2a2a2a' : '#f1f1f1',
+      borderRadius: '4px',
+    },
+    '&::-webkit-scrollbar-thumb': {
+      background: theme.palette.mode === 'dark' ? '#555' : '#888',
+      borderRadius: '4px',
+      '&:hover': {
+        background: theme.palette.mode === 'dark' ? '#777' : '#666',
+      },
+    },
   },
   formControlsWrapper: {
     backgroundColor: theme.palette.mode === 'dark' ? 'rgba(42, 42, 42, 0.8)' : 'rgba(255, 255, 255, 0.8)',
@@ -84,5 +144,6 @@ export default makeStyles((theme) => ({
     position: 'sticky',
     top: 0,
     zIndex: 1000,
+    flexShrink: 0, // Prevent shrinking
   },
 }));

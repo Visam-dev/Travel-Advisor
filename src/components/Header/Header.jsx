@@ -20,7 +20,7 @@ const Header = ({ searchQuery, setSearchQuery, darkMode, setDarkMode }) => {
   };
 
   return (
-    <AppBar position="static">
+    <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
       <Toolbar className={classes.toolbar}>
         <Typography variant="h5" className={classes.title}>
           Travel Advisor

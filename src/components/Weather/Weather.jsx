@@ -5,7 +5,6 @@ import {
   Card, 
   CardContent, 
   Grid, 
-  Chip, 
   CircularProgress,
   Fade,
   Slide,
@@ -14,9 +13,6 @@ import {
   styled
 } from '@mui/material';
 import {
-  WbSunny,
-  Cloud,
-  Opacity,
   Air,
   Visibility,
   ExpandMore,
@@ -186,7 +182,7 @@ const Weather = ({ searchQuery, coordinates }) => {
   const [weatherData, setWeatherData] = useState(null);
   const [forecastData, setForecastData] = useState(null);
   const [earthquakeData, setEarthquakeData] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true); // Start with loading true
   const [expanded, setExpanded] = useState(false);
 
   const getWeatherIcon = (weatherCode) => {
@@ -254,7 +250,16 @@ const Weather = ({ searchQuery, coordinates }) => {
     }
   }, [searchQuery]);
 
-  if (!searchQuery) return null;
+  // Also fetch weather when coordinates change (for map interactions)
+  useEffect(() => {
+    if (coordinates && coordinates.lat && coordinates.lng) {
+      // Use coordinates to get location name or fetch weather directly
+      const locationName = searchQuery || 'Karachi';
+      fetchWeatherData(locationName);
+    }
+  }, [coordinates, searchQuery]);
+
+  // Always show weather component, default to Karachi if no search query
 
   return (
     <Fade in={true} timeout={1000}>

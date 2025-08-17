@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from "react";
-import { CircularProgress, Grid, Typography, InputLabel, MenuItem, FormControl, Select } from "@mui/material";
+import { Grid, Typography, InputLabel, MenuItem, FormControl, Select, Box, Chip } from "@mui/material";
+import { FlightTakeoff, Restaurant, Hotel, Attractions } from "@mui/icons-material";
 import PlaceDetails from "../PlaceDetails/PlaceDetails";
 
 import useStyles from "./styles";
@@ -27,7 +28,32 @@ const List = ({places, type, setType, rating, setRating}) => {
 
     return (
         <div className={classes.container}>
-            <Typography variant="h3" className={classes.title}>Explore Your New HOLIDAY!!!</Typography>
+            <Box className={`${classes.titleContainer} fadeInUp`}>
+                <Typography variant="h4" className={`${classes.title} pulse`}>
+                    <FlightTakeoff className={`${classes.titleIcon} bounce`} />
+                    Explore Your New Adventure
+                </Typography>
+                <Box className={classes.subtitleContainer}>
+                    <Chip 
+                        icon={<Restaurant />} 
+                        label="Restaurants" 
+                        className={classes.typeChip}
+                        color={type === 'restaurants' ? 'primary' : 'default'}
+                    />
+                    <Chip 
+                        icon={<Hotel />} 
+                        label="Hotels" 
+                        className={classes.typeChip}
+                        color={type === 'hotels' ? 'primary' : 'default'}
+                    />
+                    <Chip 
+                        icon={<Attractions />} 
+                        label="Attractions" 
+                        className={classes.typeChip}
+                        color={type === 'attractions' ? 'primary' : 'default'}
+                    />
+                </Box>
+            </Box>
             <div className={classes.formControlsWrapper}>
                 <FormControl className={classes.formControl}>
                     <InputLabel>Type</InputLabel>

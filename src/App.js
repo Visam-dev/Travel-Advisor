@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { CssBaseline, Grid, ThemeProvider, createTheme } from "@mui/material";
+import { CssBaseline, Grid, ThemeProvider, createTheme, Box, Card, CardContent, Typography } from "@mui/material";
+import { LocationOn, Restaurant, Hotel, Attractions, Star } from "@mui/icons-material";
 import Header from "./components/Header/Header";
 import List from "./components/List/List";
 import Map from "./components/Map/Map";
@@ -12,6 +13,11 @@ const App = () => {
   const [type, setType] = useState("restaurants");
   const [rating, setRating] = useState(0);
   const [darkMode, setDarkMode] = useState(false);
+  
+  // Apply body class for dark mode
+  useEffect(() => {
+    document.body.className = darkMode ? 'dark-mode' : 'light-mode';
+  }, [darkMode]);
   
   const [coordinates, setCoordinates] = useState({
     lat: 24.8607, // Karachi coordinates
@@ -33,8 +39,8 @@ const App = () => {
         main: darkMode ? '#f48fb1' : '#dc004e',
       },
       background: {
-        default: darkMode ? '#1a1a1a' : '#f5f5f5',
-        paper: darkMode ? '#2a2a2a' : '#ffffff',
+        default: darkMode ? '#121212' : '#f5f5f5',
+        paper: darkMode ? '#1e1e1e' : '#ffffff',
       },
       text: {
         primary: darkMode ? '#ffffff' : '#000000',
@@ -89,6 +95,28 @@ const App = () => {
   });
 
   useEffect(() => {
+    // Set default Karachi bounds and coordinates immediately
+    const karachiBounds = {
+      sw: { lat: 24.7607, lng: 66.9011 },
+      ne: { lat: 24.9607, lng: 67.1011 },
+    };
+    setBounds(karachiBounds);
+    setCoordinates({ lat: 24.8607, lng: 67.0011 });
+    
+    // Load default restaurants for Karachi immediately
+    console.log("Loading default restaurants for Karachi...");
+    getPlacesData(karachiBounds, "restaurants")
+      .then((data) => {
+        console.log("Default restaurants data:", data);
+        if (data) {
+          setPlaces(data);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching default places:", error);
+      });
+
+    // Then try to get user's current location
     navigator.geolocation.getCurrentPosition(
       ({ coords: { latitude, longitude } }) => {
         const currentLocation = { lat: latitude, lng: longitude };
@@ -105,37 +133,22 @@ const App = () => {
         setBounds(bounds);
         setCoordinates(currentLocation);
         
-        // Load default restaurants for current location
+        // Load restaurants for current location
+        console.log("Loading restaurants for current location...");
         getPlacesData(bounds, "restaurants")
           .then((data) => {
+            console.log("Current location restaurants data:", data);
             if (data) {
               setPlaces(data);
             }
           })
           .catch((error) => {
-            console.error("Error fetching default places:", error);
+            console.error("Error fetching current location places:", error);
           });
       },
       (error) => {
         console.error("Geolocation error:", error);
-        // Fallback to Karachi if geolocation fails
-        const karachiBounds = {
-          sw: { lat: 24.7607, lng: 66.9011 },
-          ne: { lat: 24.9607, lng: 67.1011 },
-        };
-        setBounds(karachiBounds);
-        setCoordinates({ lat: 24.8607, lng: 67.0011 });
-        
-        // Load default restaurants for Karachi
-        getPlacesData(karachiBounds, "restaurants")
-          .then((data) => {
-            if (data) {
-              setPlaces(data);
-            }
-          })
-          .catch((error) => {
-            console.error("Error fetching default places:", error);
-          });
+        // Karachi is already set as default above
       }
     );
   }, []);
@@ -156,7 +169,7 @@ const App = () => {
           console.error("Error fetching places data:", error);
         });
     }
-  }, [searchQuery, bounds, type]);
+  }, [searchQuery, bounds, type]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Fetch places when type changes (for current location)
   useEffect(() => {
@@ -171,7 +184,7 @@ const App = () => {
           console.error("Error fetching places for type change:", error);
         });
     }
-  }, [type, bounds]);
+  }, [type, bounds]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <>
@@ -183,7 +196,7 @@ const App = () => {
           darkMode={darkMode}
           setDarkMode={setDarkMode}
         />
-        <Grid container spacing={0} style={{ width: "100%" }}>
+        <Grid container spacing={0} style={{ width: "100%", marginTop: "64px" }}>
           <Grid item xs={12} md={4}>
             <List 
               places={places} 
@@ -203,8 +216,74 @@ const App = () => {
               setPlaces={setPlaces}
               type={type}
             />
+            
+            {/* Quick Stats Panel */}
+            <Box sx={{ p: 2, display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+              <Card sx={{ 
+                flex: 1, 
+                minWidth: 200,
+                background: theme.palette.mode === 'dark' ? 'rgba(42, 42, 42, 0.9)' : 'rgba(255, 255, 255, 0.9)',
+                backdropFilter: 'blur(15px)',
+                border: theme.palette.mode === 'dark' ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid rgba(0, 0, 0, 0.1)',
+                transition: 'all 0.3s ease',
+                '&:hover': { transform: 'translateY(-2px)' }
+              }}>
+                <CardContent sx={{ textAlign: 'center' }}>
+                  <LocationOn sx={{ fontSize: 40, color: 'primary.main', mb: 1 }} />
+                  <Typography variant="h6" gutterBottom>
+                    Current Location
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {searchQuery || 'Karachi'}
+                  </Typography>
+                </CardContent>
+              </Card>
+              
+              <Card sx={{ 
+                flex: 1, 
+                minWidth: 200,
+                background: theme.palette.mode === 'dark' ? 'rgba(42, 42, 42, 0.9)' : 'rgba(255, 255, 255, 0.9)',
+                backdropFilter: 'blur(15px)',
+                border: theme.palette.mode === 'dark' ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid rgba(0, 0, 0, 0.1)',
+                transition: 'all 0.3s ease',
+                '&:hover': { transform: 'translateY(-2px)' }
+              }}>
+                <CardContent sx={{ textAlign: 'center' }}>
+                  {type === 'restaurants' && <Restaurant sx={{ fontSize: 40, color: 'primary.main', mb: 1 }} />}
+                  {type === 'hotels' && <Hotel sx={{ fontSize: 40, color: 'primary.main', mb: 1 }} />}
+                  {type === 'attractions' && <Attractions sx={{ fontSize: 40, color: 'primary.main', mb: 1 }} />}
+                  <Typography variant="h6" gutterBottom>
+                    {type.charAt(0).toUpperCase() + type.slice(1)}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {places.length} places found
+                  </Typography>
+                </CardContent>
+              </Card>
+              
+              <Card sx={{ 
+                flex: 1, 
+                minWidth: 200,
+                background: theme.palette.mode === 'dark' ? 'rgba(42, 42, 42, 0.9)' : 'rgba(255, 255, 255, 0.9)',
+                backdropFilter: 'blur(15px)',
+                border: theme.palette.mode === 'dark' ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid rgba(0, 0, 0, 0.1)',
+                transition: 'all 0.3s ease',
+                '&:hover': { transform: 'translateY(-2px)' }
+              }}>
+                <CardContent sx={{ textAlign: 'center' }}>
+                  <Star sx={{ fontSize: 40, color: 'warning.main', mb: 1 }} />
+                  <Typography variant="h6" gutterBottom>
+                    Top Rated
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {places.filter(p => p.rating >= 4.5).length} places
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Box>
+            
             <Weather 
-              searchQuery={searchQuery}
+              searchQuery={searchQuery || 'Karachi'}
               coordinates={coordinates}
             />
           </Grid>
