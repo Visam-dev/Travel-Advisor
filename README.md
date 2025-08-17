@@ -4,17 +4,17 @@ A modern, responsive travel application that helps you discover restaurants, hot
 
 ## 📸 Screenshots
 
-### Main Interface with Weather & Stats Panel
-![Travel Advisor - Main Interface](./screenshots/main-interface.png)
-
-*The main interface showing restaurant details (Eat Tandoori), Quick Stats Panel with current location, restaurants count, and top-rated places, plus weather information for Islamabad with current conditions and 5-day forecast.*
-
-### Interactive Map with Attractions
+### Interactive Map Interface
 ![Travel Advisor - Map View](./screenshots/map-view.png)
 
-*Interactive map view showing attractions in Islamabad, with the "Explore Your New Adventure" section, type filters, and detailed place information (Lok Virsa Museum) with ratings, reviews, and contact details.*
+*Interactive map view showing the search interface with "Explore Your New Adventure" title, type selection chips (Restaurants, Hotels, Attractions), filter dropdowns, and detailed place information. The map displays location markers and allows users to explore different areas.*
 
-> **Note**: To add your own screenshots, create a `screenshots` folder in your repository and upload your images there, then update the paths above.
+### Weather & Stats Dashboard
+![Travel Advisor - Weather Section](./screenshots/TA.png)
+
+*Weather dashboard showing current weather conditions, 5-day forecast, and Quick Stats Panel with location information, number of places found, and top-rated places count. Features real-time weather data with temperature, humidity, wind speed, and pressure metrics.*
+
+> **Note**: These screenshots showcase the two main interfaces - the interactive map for place discovery and the weather dashboard for current conditions and forecasts.
 
 ## ✨ Features
 
